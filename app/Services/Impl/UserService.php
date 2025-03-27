@@ -64,6 +64,7 @@ class UserService implements UserServiceInterface
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'phone_number' => $request->phone_number,
             'role' => 'user'
         ];
 
