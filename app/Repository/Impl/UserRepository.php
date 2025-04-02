@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository\Impl;
+use App\Models\User;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +21,8 @@ class UserRepository implements UserRepositoryInterface
     }
 
     public function store(array $data){
-//        return DB::table('users')->insert($data);
+        DB::table('users')->insert($data);
+//        return User::create($data);
     }
 
     public function update(array $data,$id){
