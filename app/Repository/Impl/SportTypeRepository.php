@@ -2,27 +2,13 @@
 
 namespace App\Repository\Impl;
 
+use App\Exceptions\NotFoundException;
 use App\Models\SportType;
 use App\Repository\ISportTypeRepository;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SportTypeRepository implements ISportTypeRepository
 {
-
-    /**
-     * Throw a Not Found error.
-     *
-     * @param string $message The error message to display.
-     * @throws HttpResponseException Throws a 404 error response with the message.
-     */
-    public function throwNotFoundError(string $message = 'SportType not found')
-    {
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'message' => $message,
-            'data' => null,
-        ], 404));
-    }
 
     /**
      * Get all Sport Types.
@@ -62,12 +48,13 @@ class SportTypeRepository implements ISportTypeRepository
      * @param array $data The data to update the Sport Type with.
      * @param int $id The ID of the Sport Type to update.
      * @return SportType|null Returns the updated Sport Type, or null if not found.
+     * @throws NotFoundException
      */
     public function update(array $data, $id): ?SportType
     {
         $sportType = SportType::where('sport_type_id', $id)->first();
         if (empty($sportType)) {
-            $this->throwNotFoundError();
+            throw new NotFoundException("SportType not found");
         }
         $sportType->update($data);
         $sportType->save();
@@ -79,12 +66,13 @@ class SportTypeRepository implements ISportTypeRepository
      *
      * @param int $id The ID of the Sport Type to delete.
      * @return SportType|null Returns the deleted Sport Type, or null if not found.
+     * @throws NotFoundException
      */
     public function delete($id): ?SportType
     {
         $sportType = SportType::where('sport_type_id', $id)->first();
         if (empty($sportType)) {
-            $this->throwNotFoundError();
+            throw new NotFoundException("SportType not found");
         }
         $sportType->delete();
         return $sportType;
