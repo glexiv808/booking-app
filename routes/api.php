@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProductController;
+//use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\SportTypeController;
 
 // Auth Route
 Route::post('/login', [AuthController::class, 'login']);
@@ -12,6 +12,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 
 // Products Route
+
+/*
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::middleware(['auth:sanctum', 'ability:admin,owner'])->group(function () {
@@ -20,3 +22,12 @@ Route::middleware(['auth:sanctum', 'ability:admin,owner'])->group(function () {
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 });
 
+*/
+
+Route::get("/sportTypes", [SportTypeController::class, 'index']);
+Route::get("/sportTypes/{id}", [SportTypeController::class, 'findById']);
+Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
+    Route::post('/sportTypes', [SportTypeController::class, 'store']);
+    Route::put('/sportTypes/{id}', [SportTypeController::class, 'update']);
+    Route::delete('/sportTypes/{id}', [SportTypeController::class, 'delete']);
+});
