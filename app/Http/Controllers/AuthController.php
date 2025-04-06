@@ -6,7 +6,7 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\UnauthorizedException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Services\AuthServiceInterface;
+use App\Services\IAuthService;
 use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -18,9 +18,9 @@ class AuthController extends Controller
 {
     use ApiResponse;
 
-    private AuthServiceInterface $authService;
+    private IAuthService $authService;
 
-    public function __construct(AuthServiceInterface $authService)
+    public function __construct(IAuthService $authService)
     {
         $this->authService = $authService;
     }

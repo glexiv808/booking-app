@@ -11,8 +11,8 @@ use App\Http\Resources\AuthUserResource;
 use App\Mail\VerifyEmail;
 use App\Models\User;
 use App\Repository\IVerifyCodeRepositoryInterface;
-use App\Repository\UserRepositoryInterface;
-use App\Services\AuthServiceInterface;
+use App\Repository\IUserRepository;
+use App\Services\IAuthService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,14 +20,14 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 
-class AuthService implements AuthServiceInterface
+class AuthService implements IAuthService
 {
     use ApiResponse;
 
-    private UserRepositoryInterface $userRepository;
+    private IUserRepository $userRepository;
     private IVerifyCodeRepositoryInterface $verifyCodeRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository, IVerifyCodeRepositoryInterface $verifyCodeRepository)
+    public function __construct(IUserRepository $userRepository, IVerifyCodeRepositoryInterface $verifyCodeRepository)
     {
         $this->userRepository = $userRepository;
         $this->verifyCodeRepository = $verifyCodeRepository;

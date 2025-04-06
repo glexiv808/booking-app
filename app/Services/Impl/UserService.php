@@ -3,19 +3,19 @@
 namespace App\Services\Impl;
 
 use App\Models\User;
-use App\Repository\UserRepositoryInterface;
-use App\Services\UserServiceInterface;
+use App\Repository\IUserRepository;
+use App\Services\IUserService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
 
-class UserService implements UserServiceInterface
+class UserService implements IUserService
 {
     use ApiResponse;
 
-    private UserRepositoryInterface $UserRepository;
+    private IUserRepository $UserRepository;
 
-    public function __construct(UserRepositoryInterface $UserRepository)
+    public function __construct(IUserRepository $UserRepository)
     {
         $this->UserRepository = $UserRepository;
     }

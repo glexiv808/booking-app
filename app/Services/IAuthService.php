@@ -10,7 +10,7 @@ use App\Http\Resources\AuthUserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-interface AuthServiceInterface
+interface IAuthService
 {
     /**
      * Handle user login.

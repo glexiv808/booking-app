@@ -3,12 +3,12 @@
 namespace App\Repository\Impl;
 
 use App\Models\User;
-use App\Repository\UserRepositoryInterface;
+use App\Repository\IUserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository implements IUserRepository
 {
     private string $tableUser = 'users';
 
