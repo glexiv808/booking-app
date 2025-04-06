@@ -6,8 +6,7 @@ use App\Exceptions\ErrorException;
 use App\Exceptions\UnauthorizedException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Services\Impl\UserService;
-use App\Services\UserServiceInterface;
+use App\Services\AuthServiceInterface;
 use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -19,11 +18,11 @@ class AuthController extends Controller
 {
     use ApiResponse;
 
-    private UserServiceInterface $userService;
+    private AuthServiceInterface $authService;
 
-    public function __construct(UserServiceInterface $userService)
+    public function __construct(AuthServiceInterface $authService)
     {
-        $this->userService = $userService;
+        $this->authService = $authService;
     }
 
     /**
@@ -31,10 +30,11 @@ class AuthController extends Controller
      *
      * @param LoginRequest $request
      * @return JsonResponse
+     * @throws UnauthorizedException
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        return $this->successResponse($this->userService->login($request), 'Login successful');
+        return $this->successResponse($this->authService->login($request), 'Login successful');
     }
 
     /**
@@ -46,7 +46,7 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $this->userService->register($request);
+        $this->authService->register($request);
 
         return $this->successResponse(
             [],
@@ -78,6 +78,7 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ErrorException
      */
     public function verifyEmail(Request $request): JsonResponse
     {
@@ -90,7 +91,7 @@ class AuthController extends Controller
         }
 
         return $this->successResponse(
-            $this->userService->verifyEmail($request),
+            $this->authService->verifyEmail($request),
             'Email verified successfully'
         );
     }

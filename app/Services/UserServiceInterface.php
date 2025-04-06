@@ -7,34 +7,16 @@ use App\Exceptions\UnauthorizedException;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\AuthUserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 interface UserServiceInterface
 {
     /**
-     * Handle user login.
-     *
-     * @param LoginRequest $request
-     * @return AuthUserResource Returns user data and token on success, false on failure
-     * @throws UnauthorizedException
-     */
-    public function login(LoginRequest $request): AuthUserResource;
-
-    /**
-     * Register a new user.
-     *
-     * @param RegisterRequest $request
-     * @return void
-     * @throws RecordExistsException If email already exists and is verified
-     */
-    public function register(RegisterRequest $request): void;
-
-    /**
-     * Verify email with token.
+     * Get the authenticated user's information.
      *
      * @param Request $request
-     * @return AuthUserResource
-     * @throws ErrorException
+     * @return User
      */
-    public function verifyEmail(Request $request): AuthUserResource;
+    public function getCurrentUser(Request $request): User;
 }

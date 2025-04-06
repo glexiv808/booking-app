@@ -26,15 +26,15 @@ class VerifyEmail extends Mailable
      *
      * @var string
      */
-    public $token;
+    public $url;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user, string $token)
+    public function __construct(User $user, string $url)
     {
         $this->user = $user;
-        $this->token = $token;
+        $this->url = $url;
     }
 
     /**

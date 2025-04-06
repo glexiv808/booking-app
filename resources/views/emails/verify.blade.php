@@ -8,7 +8,7 @@
 <h1>Hello, {{ $user->name }}!</h1>
 <p>Please click the button below to verify your email address.</p>
 <p>
-    <a href="{{ url('/api/verify-email?token=' . $token) }}"
+    <a href="{{ $url }}"
        style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
         Verify Email Address
     </a>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 //use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SportTypeController;
 
@@ -9,7 +10,12 @@ use App\Http\Controllers\SportTypeController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
+Route::get('/verifyEmail', [AuthController::class, 'verifyEmail']);
+
+// User Route
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [UserController::class, 'me']);
+});
 
 // Products Route
 

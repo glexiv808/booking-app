@@ -38,7 +38,7 @@ class ErrorException extends \Exception
     public function render($request): JsonResponse
     {
         return response()->json([
-            'status' => 'error',
+            'status' => $this->statusCode,
             'message' => $this->getMessage(),
             'error_code' => 'error'
         ], $this->statusCode);

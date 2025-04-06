@@ -13,7 +13,7 @@ class RecordExistsException extends Exception
      *
      * @var int
      */
-    protected $statusCode = 422;
+    protected $statusCode = 409;
 
     /**
      * Create a new exception instance.
@@ -22,7 +22,7 @@ class RecordExistsException extends Exception
      * @param int $statusCode
      * @return void
      */
-    public function __construct(?string $message = null, int $statusCode = 422)
+    public function __construct(?string $message = null, int $statusCode = 409)
     {
         $this->statusCode = $statusCode;
         $message = $message ?: 'The record already exists.';
@@ -39,7 +39,7 @@ class RecordExistsException extends Exception
     public function render($request): JsonResponse
     {
         return response()->json([
-            'status' => 'error',
+            'status' => $this->statusCode,
             'message' => $this->getMessage(),
             'error_code' => 'record_exists'
         ], $this->statusCode);
