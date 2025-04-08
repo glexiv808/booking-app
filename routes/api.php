@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 //use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SportTypeController;
+use App\Http\Controllers\VenueController;
 
 // Auth Route
 Route::post('/login', [AuthController::class, 'login']);
@@ -31,3 +32,14 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
     Route::put('/sportTypes/{id}', [SportTypeController::class, 'update']);
     Route::delete('/sportTypes/{id}', [SportTypeController::class, 'delete']);
 });
+
+
+//Venue route
+Route::prefix('venues')->group(function () {
+    Route::get('/', [VenueController::class, 'index']);
+    Route::post('/', [VenueController::class, 'store']);
+    Route::get('/{id}', [VenueController::class, 'findById']);
+    Route::put('/{id}', [VenueController::class, 'update']);
+    Route::delete('/{id}', [VenueController::class, 'delete']);
+});
+
