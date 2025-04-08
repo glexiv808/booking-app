@@ -6,7 +6,7 @@ use App\Models\Venue;
 use App\Repository\IVenueRepository;
 use App\Services\IVenueService;
 use Illuminate\Support\Str;
-
+use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class VenueService implements IVenueService
 {
@@ -16,8 +16,8 @@ class VenueService implements IVenueService
         $this->repository = $repository;
     }
 
-    public function show(): array {
-        return $this->repository->show();
+    public function show(int $perPage) {
+        return $this->repository->show($perPage);
     }
 
     public function findById(string $id): ?Venue {
@@ -27,12 +27,12 @@ class VenueService implements IVenueService
     public function add(VenueRequest $request): Venue {
         $data = [
             'venue_id' => Str::uuid(),
-            'owner_id' => $request->get('owner_id'),
+            'owner_id' => $request->user()->uuid,
             'name' => $request->get('name'),
             'address' => $request->get('address'),
             'longitude' => $request->get('longitude'),
             'latitude' => $request->get('latitude'),
-            'coordinates' => $request->get('coordinates'),
+            'coordinates' => new Point($request->get('latitude'), $request->get('longitude'),),
             'status' => $request->get('status'),
           ];
         return $this->repository->store($data);
@@ -44,7 +44,7 @@ class VenueService implements IVenueService
             'address' => $request->get('address'),
             'longitude' => $request->get('longitude'),
             'latitude' => $request->get('latitude'),
-            'coordinates' => $request->get('coordinates'),
+            'coordinates' => new Point($request->get('latitude'), $request->get('longitude'),),
             'status' => $request->get('status'),
           ];
         return $this->repository->update($data, $id);

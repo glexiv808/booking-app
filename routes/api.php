@@ -37,9 +37,10 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
 //Venue route
 Route::prefix('venues')->group(function () {
     Route::get('/', [VenueController::class, 'index']);
-    Route::post('/', [VenueController::class, 'store']);
     Route::get('/{id}', [VenueController::class, 'findById']);
-    Route::put('/{id}', [VenueController::class, 'update']);
-    Route::delete('/{id}', [VenueController::class, 'delete']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/', [VenueController::class, 'store']);
+        Route::put('/{id}', [VenueController::class, 'update']);
+        Route::delete('/{id}', [VenueController::class, 'delete']);
+    });
 });
-

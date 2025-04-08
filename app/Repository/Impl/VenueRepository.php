@@ -7,8 +7,8 @@ use App\Repository\IVenueRepository;
 
 class VenueRepository implements IVenueRepository
 {
-    public function show() {
-        return Venue::all()->toArray();
+    public function show(int $perPage) {
+        return Venue::paginate($perPage);
     }
 
     public function getById(string $id) {
