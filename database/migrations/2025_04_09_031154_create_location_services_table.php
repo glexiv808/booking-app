@@ -12,13 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('location_services', function (Blueprint $table) {
-            $table->id("service_id")->autoIncrement();
-            $table->string("venue_id",32);
+            $table->id("service_id")->autoIncrement()->primary();
+            $table->uuid('venue_id');
             $table->string("service_name",50);
             $table->decimal("price", 10, 2);
             $table->boolean("is_available");
             $table->text("description");
             $table->timestamps();
+
+            $table->foreign("venue_id")->references("venue_id")->on("venues");
         });
     }
 

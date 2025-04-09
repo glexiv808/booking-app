@@ -8,7 +8,7 @@ use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use App\Services\ILocationServiceService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
+use Illuminate\Http\Request;
 /**
  * Class LocationServiceController
  *
@@ -99,8 +99,8 @@ class LocationServiceController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function delete(int $id): JsonResponse {
-        $data = $this->locationService->delete($id);
+    public function delete(int $id, Request $request): JsonResponse {
+        $data = $this->locationService->delete($id, $request);
         if (!$data) {
             return $this->errorResponse("Deleted Location Service Failed", 500);
         }

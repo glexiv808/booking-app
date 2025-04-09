@@ -44,7 +44,7 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
 Route::prefix('location-services')->group(function () {
     Route::get('/', [LocationServiceController::class, 'index']);
     Route::get('/{id}', [LocationServiceController::class, 'findById']);
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'ability:owner'])->group(function () {
         Route::post('/', [LocationServiceController::class, 'store']);
         Route::put('/{id}', [LocationServiceController::class, 'update']);
         Route::delete('/{id}', [LocationServiceController::class, 'delete']);
