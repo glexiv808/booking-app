@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SportTypeController;
+use App\Http\Controllers\LocationServiceController;
 
 // Auth Route
 Route::post('/login', [AuthController::class, 'login']);
@@ -36,4 +37,15 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
     Route::post('/sportTypes', [SportTypeController::class, 'store']);
     Route::put('/sportTypes/{id}', [SportTypeController::class, 'update']);
     Route::delete('/sportTypes/{id}', [SportTypeController::class, 'delete']);
+});
+
+// LocationService routes
+Route::prefix('location-services')->group(function () {
+    Route::get('/', [LocationServiceController::class, 'index']);
+    Route::get('/{id}', [LocationServiceController::class, 'findById']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/', [LocationServiceController::class, 'store']);
+        Route::put('/{id}', [LocationServiceController::class, 'update']);
+        Route::delete('/{id}', [LocationServiceController::class, 'delete']);
+    });
 });
