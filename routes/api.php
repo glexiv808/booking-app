@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SportTypeController;
+use App\Http\Controllers\LocationServiceController;
+use App\Http\Controllers\VenueController;
 
 // Auth Route
 Route::post('/login', [AuthController::class, 'login']);
