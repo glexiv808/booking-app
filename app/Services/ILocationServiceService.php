@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Http\Requests\LocationServiceRequest;
 use App\Models\LocationService;
+use Illuminate\Http\Request;
 
 /**
  * Interface ILocationServiceService
@@ -51,5 +52,5 @@ interface ILocationServiceService
      * @param int $id LocationService UUID
      * @return LocationService|null The deleted LocationService or null if not found
      */
-    public function delete(int $id): ?LocationService;
+    public function delete(int $id, Request  $request): ?LocationService;
 }
