@@ -21,8 +21,8 @@ class LocationServiceService implements ILocationServiceService
         $this->venueRepository = $venueRepository;
     }
 
-    public function show(int $perPage) {
-        return $this->repository->show($perPage);
+    public function show(int $perPage , string $id) {
+        return $this->repository->show($perPage,$id);
     }
 
     public function findById(int $id): ?LocationService {

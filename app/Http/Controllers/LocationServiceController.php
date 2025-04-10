@@ -41,12 +41,12 @@ class LocationServiceController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse {
+    public function index(Request $request): JsonResponse {
         $perPage = intval(request('per_page', 10));
         $perPage = max(1, min($perPage, 50));
-
+        $id = $request['id'];
         return $this->successResponse(
-            $this->locationService->show($perPage),
+            $this->locationService->show($perPage,$id),
             "List of Location Services"
         );
     }
