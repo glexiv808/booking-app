@@ -6,8 +6,9 @@ use App\Repository\ILocationServiceRepository;
 
 class LocationServiceRepository implements ILocationServiceRepository
 {
-    public function show(int $perPage) {
-        return LocationService::paginate($perPage);
+    public function show(int $perPage, string $id) {
+
+        return LocationService::where('venue_id', $id)->paginate($perPage);
     }
 
     public function getById(int $id) {

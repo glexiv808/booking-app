@@ -16,7 +16,7 @@ interface ILocationServiceRepository
      * @param int $perPage Number of LocationServices per page
      * @return mixed Paginated list of LocationServices
      */
-    public function show(int $perPage);
+    public function show(int $perPage, string $id);
 
     /**
      * Get a single LocationService by its ID.
