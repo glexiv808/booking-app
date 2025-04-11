@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class VenueRequest extends FormRequest
+class VenueFormRequest extends FormRequest
 {
     public function authorize(): bool {
         return true;
@@ -18,13 +18,14 @@ class VenueRequest extends FormRequest
             'address' => 'required|string',
             'longitude' => 'required|numeric',
             'latitude' => 'required|numeric',
-            'status' => 'required|in:active,locked',
+            'bank_account_number' => 'required|string',
+            'bank_name' => 'required|string'
         ];
     }
 
     public function failedValidation(Validator $validator) {
         throw new HttpResponseException(response()->json([
-            'success' => false,
+            'status' => 400,
             'message' => 'Validation errors',
             'data' => $validator->errors()
         ]));

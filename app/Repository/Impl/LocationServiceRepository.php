@@ -6,12 +6,13 @@ use App\Repository\ILocationServiceRepository;
 
 class LocationServiceRepository implements ILocationServiceRepository
 {
-    public function show(int $perPage) {
-        return LocationService::paginate($perPage);
+    public function show(int $perPage, string $id) {
+
+        return LocationService::where('venue_id', $id)->paginate($perPage);
     }
 
     public function getById(int $id) {
-        return LocationService::where('LocationService_id', $id)->first();
+        return LocationService::where('service_id', $id)->first();
     }
 
     public function store(array $data) {
@@ -19,7 +20,7 @@ class LocationServiceRepository implements ILocationServiceRepository
     }
 
     public function update(array $data, int $id) {
-        $LocationService = LocationService::where('LocationService_id', $id)->first();
+        $LocationService = LocationService::where('service_id', $id)->first();
         if (!$LocationService) return null;
 
         $LocationService->update($data);
@@ -27,7 +28,7 @@ class LocationServiceRepository implements ILocationServiceRepository
     }
 
     public function delete(int $id) {
-        $LocationService = LocationService::where('LocationService_id', $id)->first();
+        $LocationService = LocationService::where('service_id', $id)->first();
         if (!$LocationService) return null;
 
         $LocationService->delete();

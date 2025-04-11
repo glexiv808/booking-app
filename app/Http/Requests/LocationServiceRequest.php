@@ -25,9 +25,9 @@ class LocationServiceRequest extends FormRequest
     {
         return [
             //
-            'venue_id' => 'required|string|max:32',
-            'service_name' => 'required|string|max:50',
-            'price' => 'required|numeric|min:0|max:99999999.99',
+            'venue_id' => 'required|string|exists:venues,venue_id',
+            'service_name' => 'required|string',
+            'price' => 'required|numeric|min:0',
             'is_available' => 'required|boolean',
             'description' => 'required|string',
         ];
@@ -35,7 +35,7 @@ class LocationServiceRequest extends FormRequest
 
     public function failedValidation(Validator $validator) {
         throw new HttpResponseException(response()->json([
-            'success' => false,
+            'status' => 400,
             'message' => 'Validation errors',
             'data' => $validator->errors()
         ]));

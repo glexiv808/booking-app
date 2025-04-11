@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LocationServiceRequest;
-use App\Models\LocationService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use App\Services\ILocationServiceService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
+use Illuminate\Http\Request;
 /**
  * Class LocationServiceController
  *
@@ -39,14 +38,15 @@ class LocationServiceController extends Controller
     /**
      * Get a paginated list of location services.
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse {
+    public function index(Request $request): JsonResponse {
         $perPage = intval(request('per_page', 10));
         $perPage = max(1, min($perPage, 50));
-
+        $id = $request['id'];
         return $this->successResponse(
-            $this->locationService->show($perPage),
+            $this->locationService->show($perPage,$id),
             "List of Location Services"
         );
     }
@@ -90,17 +90,18 @@ class LocationServiceController extends Controller
         if (!$data) {
             return $this->errorResponse("Updated Location Service Failed", 500);
         }
-        return $this->successResponse($data, "Updated Location Service by ID", 200);
+        return $this->successResponse($data, "Updated Location Service by ID");
     }
 
     /**
      * Delete a location service by ID.
      *
      * @param int $id
+     * @param Request $request
      * @return JsonResponse
      */
-    public function delete(int $id): JsonResponse {
-        $data = $this->locationService->delete($id);
+    public function delete(int $id, Request $request): JsonResponse {
+        $data = $this->locationService->delete($id, $request);
         if (!$data) {
             return $this->errorResponse("Deleted Location Service Failed", 500);
         }

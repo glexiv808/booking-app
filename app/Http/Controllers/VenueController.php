@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\VenueRequest;
+use App\Http\Requests\PaginatingDataVenueRequest;
+use App\Http\Requests\UpdateVenueStatusRequest;
+use App\Http\Requests\VenueFormRequest;
 use App\Models\Venue;
 use App\Traits\ApiResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use App\Services\IVenueService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -32,20 +35,22 @@ class VenueController extends Controller
      *
      * @param IVenueService $venueService
      */
-    public function __construct(IVenueService  $venueService) {
+    public function __construct(IVenueService  $venueService)
+    {
         $this->venueService = $venueService;
     }
 
     /**
      * Get a paginated list of venues.
      *
+     * @param PaginatingDataVenueRequest $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse {
-        $perPage = intval(request('per_page', 2));
-        $perPage = max(1, min($perPage, 20));
-
-        return $this->successResponse($this->venueService->show($perPage),"List of Venues"
+    public function index(PaginatingDataVenueRequest $request): JsonResponse
+    {
+        return $this->successResponse(
+            $this->venueService->show($request),
+            "List of Venues"
         );
     }
 
@@ -53,12 +58,13 @@ class VenueController extends Controller
      * Store a new venue.
      * Only authorized users (admin or owner) can perform this action.
      *
-     * @param VenueRequest $request
+     * @param VenueFormRequest $request
      * @return JsonResponse
+     * @throws AuthorizationException
      */
-    public function store(VenueRequest $request): JsonResponse {
+    public function store(VenueFormRequest $request): JsonResponse
+    {
         $this->authorize('create', Venue::class);
-        $user = $request->user();
         return $this->successResponse($this->venueService->add($request), "Saved Venue");
     }
 
@@ -68,7 +74,8 @@ class VenueController extends Controller
      * @param string $id
      * @return JsonResponse
      */
-    public function findById(string $id): JsonResponse {
+    public function findById(string $id): JsonResponse
+    {
         return $this->successResponse($this->venueService->findById($id), "Venue by ID");
     }
 
@@ -77,17 +84,19 @@ class VenueController extends Controller
      * Only the venue owner can update it.
      *
      * @param string $id
-     * @param VenueRequest $request
+     * @param VenueFormRequest $request
      * @return JsonResponse
+     * @throws AuthorizationException
      */
-    public function update(string $id, VenueRequest $request): JsonResponse {
+    public function update(string $id, VenueFormRequest $request): JsonResponse
+    {
         $venue = $this->venueService->findById($id);
-        $this->authorize('update', $venue);
+        $this->authorize('update', [$venue, $request]);
         $data = $this->venueService->update($id, $request);
         if (!$data) {
             return $this->errorResponse("Updated Venue Failed", 500);
         }
-        return $this->successResponse($data, "Updated Venue by id", 200);
+        return $this->successResponse($data, "Updated Venue by id");
     }
 
     /**
@@ -96,8 +105,10 @@ class VenueController extends Controller
      *
      * @param string $id
      * @return JsonResponse
+     * @throws AuthorizationException
      */
-    public function delete(string $id): JsonResponse {
+    public function delete(string $id): JsonResponse
+    {
         $venue = $this->venueService->findById($id);
         $this->authorize('delete', $venue);
         $data = $this->venueService->delete($id);
@@ -106,4 +117,15 @@ class VenueController extends Controller
         }
         return $this->successResponse($data, "Deleted Venue by id");
     }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function updateStatus(UpdateVenueStatusRequest $request, string $id): JsonResponse
+    {
+        $this->authorize('isActive', Venue::class);
+        $data = $this->venueService->updateStatus($id, $request->validated());
+        return $this->successResponse($data, "Deleted Venue by id");
+    }
+
 }

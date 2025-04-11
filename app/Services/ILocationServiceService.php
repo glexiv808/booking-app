@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Http\Requests\LocationServiceRequest;
 use App\Models\LocationService;
+use Illuminate\Http\Request;
 
 /**
  * Interface ILocationServiceService
@@ -18,12 +19,12 @@ interface ILocationServiceService
      * @param int $perPage Number of items per page
      * @return mixed Paginated list of LocationServices
      */
-    public function show(int $perPage);
+    public function show(int $perPage, string $id);
 
     /**
      * Find a LocationService by its ID.
      *
-     * @param int $id LocationService UUID
+     * @param int $id LocationService service_id
      * @return LocationService|null LocationService object or null if not found
      */
     public function findById(int $id): ?LocationService;
@@ -39,7 +40,7 @@ interface ILocationServiceService
     /**
      * Update a LocationService by its ID.
      *
-     * @param int $id LocationService UUID
+     * @param int $id LocationService service_id
      * @param LocationServiceRequest $request The validated request data
      * @return LocationService|null The updated LocationService or null if not found
      */
@@ -48,8 +49,8 @@ interface ILocationServiceService
     /**
      * Delete a LocationService by its ID.
      *
-     * @param int $id LocationService UUID
+     * @param int $id LocationService service_id
      * @return LocationService|null The deleted LocationService or null if not found
      */
-    public function delete(int $id): ?LocationService;
+    public function delete(int $id, Request  $request): ?LocationService;
 }

@@ -1,7 +1,8 @@
 <?php
 namespace App\Services;
 
-use App\Http\Requests\VenueRequest;
+use App\Http\Requests\PaginatingDataVenueRequest;
+use App\Http\Requests\VenueFormRequest;
 use App\Models\Venue;
 
 /**
@@ -15,10 +16,10 @@ interface IVenueService
     /**
      * Get a paginated list of venues.
      *
-     * @param int $perPage Number of items per page
+     * @param PaginatingDataVenueRequest $request
      * @return mixed Paginated list of venues
      */
-    public function show(int $perPage);
+    public function show(PaginatingDataVenueRequest $request);
 
     /**
      * Find a venue by its ID.
@@ -31,19 +32,26 @@ interface IVenueService
     /**
      * Create and store a new venue.
      *
-     * @param VenueRequest $request The validated request data
      * @return Venue The created venue
      */
-    public function add(VenueRequest $request): Venue;
+    public function add(VenueFormRequest $request): Venue;
 
     /**
      * Update a venue by its ID.
      *
      * @param string $id Venue UUID
-     * @param VenueRequest $request The validated request data
      * @return Venue|null The updated venue or null if not found
      */
-    public function update(string $id, VenueRequest $request): ?Venue;
+    public function update(string $id, VenueFormRequest $request): ?Venue;
+
+    /**
+     * Update the status of a venue (admin only).
+     *
+     * @param string $id Venue UUID
+     * @param array $data Validated status data
+     * @return Venue|null The updated venue
+     */
+    public function updateStatus(string $id, array $data): ?Venue;
 
     /**
      * Delete a venue by its ID.
@@ -52,4 +60,7 @@ interface IVenueService
      * @return Venue|null The deleted venue or null if not found
      */
     public function delete(string $id): ?Venue;
+
+    // public function searchByFilter(PaginatingDataVenueRequest $request);
+
 }

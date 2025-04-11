@@ -18,7 +18,7 @@ class LocationServiceFactory extends Factory
     {
         return [
             //
-            'venue_id' => bin2hex(random_bytes(16)),
+            'venue_id' => $this->faker->uuid(),
             'service_name' => $this->faker->words(3, true), // ví dụ: "Deluxe Massage Package"
             'price' => $this->faker->randomFloat(2, 10, 1000), // từ 10 đến 1000
             'is_available' => $this->faker->boolean(),
