@@ -31,7 +31,7 @@ class VenueImageRequest extends FormRequest
 
     public function failedValidation(Validator $validator) {
         throw new HttpResponseException(response()->json([
-            'success' => false,
+            'success' => 400,
             'message' => 'Validation errors',
             'data' => $validator->errors()
         ]));

@@ -8,6 +8,7 @@ use App\Http\Controllers\SportTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\VenueImageController;
+use App\Http\Controllers\VenuePaymentController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes
@@ -67,7 +68,6 @@ Route::prefix('fields')->group(function () {
 Route::prefix('venues')->group(function () {
     Route::get('/', [VenueController::class, 'index']);
     Route::get('/search_by_id/{venue_id}', [VenueController::class, 'findById']);
-    // Route::get('/search_by_name', [VenueController::class, 'searchByName']);
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [VenueController::class, 'store']);
         Route::put('/{venue_id}', [VenueController::class, 'update']);
@@ -77,11 +77,20 @@ Route::prefix('venues')->group(function () {
     });
 });
 
-//VenueImage
+// VenueImage routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/venue-images/{venue_id}', [VenueImageController::class, 'getImagesByVenue']);
     Route::post('/venue-images/{venue_id}', [VenueImageController::class, 'store']);
     Route::delete('/venue-images/{image_id}', [VenueImageController::class, 'destroy']);
     Route::put('/venue-images/{image_id}/thumbnail', [VenueImageController::class, 'updateThumbnail']);
+});
+
+// Payment routes
+Route::get('/paymentReminderEmail', [VenuePaymentController::class, 'paymentReminderEmail']);
+Route::get('/unpaidVenueLocking', [VenuePaymentController::class, 'unpaidVenueLocking']);
+Route::post('/webhook/handlePayment', [VenuePaymentController::class, 'handle']);
+Route::middleware(['auth:sanctum', 'ability:owner'])->group(function () {
+    Route::post('/venuePayment/{venue_id}', [VenuePaymentController::class, 'make']);
+    Route::get('/venuePayment', [VenuePaymentController::class, 'getAllVenueByOwnerId']);
 });
 

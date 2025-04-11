@@ -3,7 +3,6 @@ namespace App\Services;
 
 use App\Http\Requests\PaginatingDataVenueRequest;
 use App\Http\Requests\VenueFormRequest;
-use App\Http\Requests\VenueRequest;
 use App\Models\Venue;
 
 /**
@@ -17,7 +16,7 @@ interface IVenueService
     /**
      * Get a paginated list of venues.
      *
-     * @param int $perPage Number of items per page
+     * @param PaginatingDataVenueRequest $request
      * @return mixed Paginated list of venues
      */
     public function show(PaginatingDataVenueRequest $request);
@@ -33,7 +32,6 @@ interface IVenueService
     /**
      * Create and store a new venue.
      *
-     * @param VenueRequest $request The validated request data
      * @return Venue The created venue
      */
     public function add(VenueFormRequest $request): Venue;
@@ -42,7 +40,6 @@ interface IVenueService
      * Update a venue by its ID.
      *
      * @param string $id Venue UUID
-     * @param VenueRequest $request The validated request data
      * @return Venue|null The updated venue or null if not found
      */
     public function update(string $id, VenueFormRequest $request): ?Venue;
@@ -52,7 +49,7 @@ interface IVenueService
      *
      * @param string $id Venue UUID
      * @param array $data Validated status data
-     * @return Venue The updated venue
+     * @return Venue|null The updated venue
      */
     public function updateStatus(string $id, array $data): ?Venue;
 

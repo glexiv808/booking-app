@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PaginatingDataVenueRequest;
 use App\Http\Requests\UpdateVenueStatusRequest;
 use App\Http\Requests\VenueFormRequest;
-use App\Http\Requests\VenueRequest;
 use App\Models\Venue;
 use App\Traits\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -44,6 +43,7 @@ class VenueController extends Controller
     /**
      * Get a paginated list of venues.
      *
+     * @param PaginatingDataVenueRequest $request
      * @return JsonResponse
      */
     public function index(PaginatingDataVenueRequest $request): JsonResponse
@@ -118,6 +118,9 @@ class VenueController extends Controller
         return $this->successResponse($data, "Deleted Venue by id");
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function updateStatus(UpdateVenueStatusRequest $request, string $id): JsonResponse
     {
         $this->authorize('isActive', Venue::class);

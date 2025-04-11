@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\VenueImage;
-use App\Traits\ApiResponse;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use App\Services\IVenueImageService;
 use App\Http\Requests\VenueImageRequest;
+use App\Models\VenueImage;
+use App\Services\IVenueImageService;
+use App\Traits\ApiResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 
 class VenueImageController extends Controller
@@ -48,6 +48,7 @@ class VenueImageController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @throws AuthorizationException
      */
     public function store(VenueImageRequest $request, string $venue_id): JsonResponse
     {
@@ -85,6 +86,9 @@ class VenueImageController extends Controller
         //
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function updateThumbnail(VenueImageRequest $request, int $image_id): JsonResponse
     {
         $this->authorize('updateThumbnail', [VenueImage::class, $image_id]);
@@ -98,6 +102,7 @@ class VenueImageController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @throws AuthorizationException
      */
     public function destroy(int $image_id): JsonResponse
     {

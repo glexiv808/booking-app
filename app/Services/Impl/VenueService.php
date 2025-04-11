@@ -3,14 +3,12 @@
 namespace App\Services\Impl;
 
 use App\Http\Requests\PaginatingDataVenueRequest;
-use App\Http\Requests\SearchVenueRequest;
 use App\Http\Requests\VenueFormRequest;
-use App\Http\Requests\VenueRequest;
 use App\Models\Venue;
 use App\Repository\IVenueRepository;
 use App\Services\IVenueService;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class VenueService implements IVenueService
