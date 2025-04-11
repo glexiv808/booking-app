@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class LocationServiceRequest extends FormRequest
+class FieldRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,10 +26,10 @@ class LocationServiceRequest extends FormRequest
         return [
             //
             'venue_id' => 'required|string|exists:venues,venue_id',
-            'service_name' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'is_available' => 'required|boolean',
-            'description' => 'required|string',
+            'sport_type_id' => 'required|numeric|exists:sport_types,sport_type_id',
+            'field_name' => 'required|string',
+            'default_price' => 'required|numeric|min:0',
+            'is_active' => 'boolean',
         ];
     }
 
