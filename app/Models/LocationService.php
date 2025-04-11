@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class LocationService extends Model
 {
-    //
     use HasFactory;
     protected $table = 'location_services';
     protected $primaryKey = 'service_id';

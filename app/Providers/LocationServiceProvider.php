@@ -19,7 +19,6 @@ class LocationServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
         $this->app->bind(ILocationServiceRepository::class, LocationServiceRepository::class);
         $this->app->bind(ILocationServiceService::class, LocationServiceService::class);
     }

@@ -30,7 +30,7 @@ class VenuePaymentController extends Controller
     public function make(VenuePaymentRequest $request, string $venue_id): JsonResponse
     {
         $data = $this->venuePaymentService->makePayment($request, $venue_id);
-        return $this->successResponse($data, "Updated Venue by id", 200);
+        return $this->successResponse($data, "Updated Venue by id");
     }
 
     /**
@@ -65,7 +65,7 @@ class VenuePaymentController extends Controller
      *
      * @throws JsonResponse 401 Unauthorized if 'X-PYTHON' header is missing.
      */
-    public function paymentRemiderEmail(Request $request): JsonResponse {
+    public function paymentReminderEmail(Request $request): JsonResponse {
         if ($res = $this->rejectIfNotPython($request)) return $res;
         $this->venuePaymentService->paymentRemiderEmail();
         return response()->json(['received' => true]);

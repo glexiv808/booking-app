@@ -16,7 +16,6 @@ class FieldProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
         $this->app->bind(IFieldRepository::class, FieldRepository::class);
         $this->app->bind(IFieldService::class, FieldService::class);
     }

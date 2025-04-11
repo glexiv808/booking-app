@@ -23,7 +23,6 @@ class ReviewController extends Controller
 
     public function index(Request $request):JsonResponse
     {
-        //
         $perPage = intval(request('per_page', 10));
         $perPage = max(1, min($perPage, 50));
         $id = $request['id'];
@@ -43,7 +42,6 @@ class ReviewController extends Controller
      */
     public function store(ReviewRequest $request):JsonResponse
     {
-        //
         return $this->successResponse(
             $this->reviewService->add($request),
             "Saved Field"
@@ -56,7 +54,6 @@ class ReviewController extends Controller
      */
     public function delete(string $id, Request $request):JsonResponse
     {
-        //
         $data = $this->reviewService->delete($id, $request);
         if (!$data) {
             return $this->errorResponse("Deleted Review Failed", 500);

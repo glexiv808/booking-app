@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\VenueRequest;
 use App\Models\Venue;
 use App\Traits\ApiResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use App\Services\IVenueService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -55,10 +56,10 @@ class VenueController extends Controller
      *
      * @param VenueRequest $request
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function store(VenueRequest $request): JsonResponse {
         $this->authorize('create', Venue::class);
-        $user = $request->user();
         return $this->successResponse($this->venueService->add($request), "Saved Venue");
     }
 
@@ -79,6 +80,7 @@ class VenueController extends Controller
      * @param string $id
      * @param VenueRequest $request
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function update(string $id, VenueRequest $request): JsonResponse {
         $venue = $this->venueService->findById($id);
@@ -87,7 +89,7 @@ class VenueController extends Controller
         if (!$data) {
             return $this->errorResponse("Updated Venue Failed", 500);
         }
-        return $this->successResponse($data, "Updated Venue by id", 200);
+        return $this->successResponse($data, "Updated Venue by id");
     }
 
     /**
@@ -96,6 +98,7 @@ class VenueController extends Controller
      *
      * @param string $id
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function delete(string $id): JsonResponse {
         $venue = $this->venueService->findById($id);

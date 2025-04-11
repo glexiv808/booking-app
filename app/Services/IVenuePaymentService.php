@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use App\Http\Requests\VenuePaymentRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use \Illuminate\Http\JsonResponse;
+
 interface IVenuePaymentService
 {
     /**

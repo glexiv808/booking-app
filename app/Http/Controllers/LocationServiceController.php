@@ -38,6 +38,7 @@ class LocationServiceController extends Controller
     /**
      * Get a paginated list of location services.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse {
@@ -89,13 +90,14 @@ class LocationServiceController extends Controller
         if (!$data) {
             return $this->errorResponse("Updated Location Service Failed", 500);
         }
-        return $this->successResponse($data, "Updated Location Service by ID", 200);
+        return $this->successResponse($data, "Updated Location Service by ID");
     }
 
     /**
      * Delete a location service by ID.
      *
      * @param int $id
+     * @param Request $request
      * @return JsonResponse
      */
     public function delete(int $id, Request $request): JsonResponse {
