@@ -11,14 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('court', function (Blueprint $table) {
+        Schema::create('courts', function (Blueprint $table) {
             $table->uuid('court_id')->primary();
-            $table->string('field_id')->references('field_id')->on('field')->onDelete('cascade');
+
+            $table->uuid('field_id'); 
             $table->string('court_name');
             $table->boolean('is_active');
             $table->timestamps();
+
+            // Tạo khóa ngoại sau khi đã tạo cột
+            $table->foreign('field_id')->references('field_id')->on('fields')->onDelete('cascade');
         });
     }
+
 
     /**
      * Reverse the migrations.

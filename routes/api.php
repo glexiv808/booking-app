@@ -10,6 +10,7 @@ use App\Http\Controllers\VenueController;
 use App\Http\Controllers\VenueImageController;
 use App\Http\Controllers\VenuePaymentController;
 use App\Http\Controllers\CourtController;
+use App\Http\Controllers\CourtSlotController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes
@@ -102,5 +103,13 @@ Route::prefix('court')->group(function () {
     Route::get('/{id}', [CourtController::class, 'findById']);
     Route::put('/{id}', [CourtController::class, 'update']);
     Route::delete('/{id}', [CourtController::class, 'delete']);
+});
+
+Route::prefix('courtslot')->group(function () {
+    Route::get('/', [CourtSlotController::class, 'index']);
+    Route::post('/', [CourtSlotController::class, 'store']);
+    Route::get('/{id}', [CourtSlotController::class, 'findById']);
+    Route::put('/{id}', [CourtSlotController::class, 'update']);
+    Route::delete('/{id}', [CourtSlotController::class, 'delete']);
 });
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class bookingCourt extends Model
 {
-    protected $table = 'bookingCourts'; 
+    protected $table = 'booking_courts'; 
 
     protected $primaryKey = 'booking_court_id';
     public $incrementing = true;

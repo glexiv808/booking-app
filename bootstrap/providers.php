@@ -11,4 +11,6 @@ return [
     App\Providers\UserServiceProvider::class,
     App\Providers\VenuePaymentProvider::class,
     App\Providers\VenueProvider::class,
+    App\Providers\CourtProvider::class,
+    App\Providers\CourtSlotProvider::class,
 ];
