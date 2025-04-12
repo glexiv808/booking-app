@@ -6,22 +6,27 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CourtSlotRequest extends FormRequest
+class BookingCourtRequest extends FormRequest
 {
+    /**
+     * Xác định xem người dùng có được phép gửi request không.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Các rules dùng để validate request.
+     */
     public function rules(): array
     {
         return [
-            'court_id' => 'required|uuid|exists:court,court_id',
-            'booking_court_id' => 'required|uuid|exists:bookingCourts,booking_court_id',
+            'booking_id' => 'required|uuid',
+            'court_id' => 'required|uuid',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
-            'is_looked' => 'required|boolean',
-            'locked_by_owner' => 'required|boolean',
+            'price' => 'required|numeric|min:0',
         ];
     }
 

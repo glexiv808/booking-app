@@ -20,15 +20,15 @@ class CourtSlotController extends Controller
     }
 
     public function index(): JsonResponse {
-        return $this->successResponse($this->courtSlotService->show(), "List of Courts");
+        return $this->successResponse($this->courtSlotService->show(), "List of Court Slot");
     }
 
     public function store(CourtSlotRequest $request): JsonResponse {
-        return $this->successResponse($this->courtSlotService->add($request), "Saved Court");
+        return $this->successResponse($this->courtSlotService->add($request), "Saved Court Slot");
     }
 
     public function findById(string $id): JsonResponse {
-        return $this->successResponse($this->courtSlotService->findById($id), "Court by ID");
+        return $this->successResponse($this->courtSlotService->findById($id), "Court Slot by ID");
     }
 
     public function update(string $id, CourtSlotRequest $request): JsonResponse {
@@ -42,7 +42,7 @@ class CourtSlotController extends Controller
     public function delete(string $id): JsonResponse {
         $data = $this->courtSlotService->delete($id);
         if (!$data) {
-            return $this->errorResponse("Deleted Court Failed", 500);
+            return $this->errorResponse("Deleted Court Slot Failed", 500);
         }
         return $this->successResponse($data, "Deleted Court Slot by ID");
     }
