@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\VenueImageController;
 use App\Http\Controllers\VenuePaymentController;
+use App\Http\Controllers\CourtController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes
@@ -92,5 +93,14 @@ Route::post('/webhook/handlePayment', [VenuePaymentController::class, 'handle'])
 Route::middleware(['auth:sanctum', 'ability:owner'])->group(function () {
     Route::post('/venuePayment/{venue_id}', [VenuePaymentController::class, 'make']);
     Route::get('/venuePayment', [VenuePaymentController::class, 'getAllVenueByOwnerId']);
+});
+
+//Court routes
+Route::prefix('court')->group(function () {
+    Route::get('/', [CourtController::class, 'index']);
+    Route::post('/', [CourtController::class, 'store']);
+    Route::get('/{id}', [CourtController::class, 'findById']);
+    Route::put('/{id}', [CourtController::class, 'update']);
+    Route::delete('/{id}', [CourtController::class, 'delete']);
 });
 

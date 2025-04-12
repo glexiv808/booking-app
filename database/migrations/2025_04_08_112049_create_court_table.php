@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('court', function (Blueprint $table) {
             $table->uuid('court_id')->primary();
-            $table->string("venue_id");
-            $table->string("name");
-            $table->boolean("is_active");
+            $table->string('field_id')->references('field_id')->on('field')->onDelete('cascade');
+            $table->string('court_name');
+            $table->boolean('is_active');
             $table->timestamps();
         });
     }
