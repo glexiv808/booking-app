@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FieldController;
+use App\Http\Controllers\FieldOpeningHoursController;
 use App\Http\Controllers\LocationServiceController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SportTypeController;
@@ -96,27 +97,40 @@ Route::middleware(['auth:sanctum', 'ability:owner'])->group(function () {
     Route::post('/venuePayment/{venue_id}', [VenuePaymentController::class, 'make']);
     Route::get('/venuePayment', [VenuePaymentController::class, 'getAllVenueByOwnerId']);
 });
-
 //Court routes
 Route::prefix('court')->group(function () {
     Route::get('/', [CourtController::class, 'index']);
     Route::post('/', [CourtController::class, 'store']);
-    Route::get('/{id}', [CourtController::class, 'findById']);
-    Route::put('/{id}', [CourtController::class, 'update']);
-    Route::delete('/{id}', [CourtController::class, 'delete']);
+    Route::get('/{court_id}', [CourtController::class, 'findById']);
+    Route::put('/{court_id}', [CourtController::class, 'update']);
+    Route::delete('/{court_id}', [CourtController::class, 'delete']);
 });
 
 Route::prefix('courtslot')->group(function () {
     Route::get('/', [CourtSlotController::class, 'index']);
     Route::post('/', [CourtSlotController::class, 'store']);
-    Route::get('/{id}', [CourtSlotController::class, 'findById']);
-    Route::put('/{id}', [CourtSlotController::class, 'update']);
-    Route::delete('/{id}', [CourtSlotController::class, 'delete']);
+    Route::get('/{slot_id}', [CourtSlotController::class, 'findById']);
+    Route::put('/{slot_id}', [CourtSlotController::class, 'update']);
+    Route::delete('/{slot_id}', [CourtSlotController::class, 'delete']);
 });
 Route::prefix('bookingcourt')->group(function () {
     Route::get('/', [BookingCourtController::class, 'index']);
     Route::post('/', [BookingCourtController::class, 'store']);
-    Route::get('/{id}', [BookingCourtController::class, 'findById']);
-    Route::put('/{id}', [BookingCourtController::class, 'update']);
-    Route::delete('/{id}', [BookingCourtController::class, 'delete']);
+    Route::get('/{booking_court_id}', [BookingCourtController::class, 'findById']);
+    Route::put('/{booking_court_id}', [BookingCourtController::class, 'update']);
+    Route::delete('/{booking_court_id}', [BookingCourtController::class, 'delete']);
 });
+//Field Opening Hours
+Route::get('/showByFieldId/{fieldId}', [FieldOpeningHoursController::class, 'showByFieldId']);
+Route::middleware(['auth:sanctum', 'ability:owner'])->group(function () {
+    Route::post('/openingHours/test', [FieldOpeningHoursController::class, 'test']);
+    Route::post('/openingHours', [FieldOpeningHoursController::class, 'store']);
+    Route::put('/openingHours', [FieldOpeningHoursController::class, 'store']);
+});
+
+Route::post('/test-log2', function () {
+    \Illuminate\Support\Facades\Log::info('Test log');
+    return response()->json(['message' => 'OK123123']);
+});
+
+

@@ -12,5 +12,7 @@ return [
     App\Providers\VenuePaymentProvider::class,
     App\Providers\VenueProvider::class,
     App\Providers\CourtSlotProvider::class,
-    App\Providers\BookingCourtProvider::class
+    App\Providers\BookingCourtProvider::class,
+    App\Providers\FieldOpeningHoursProvider::class
+
 ];
