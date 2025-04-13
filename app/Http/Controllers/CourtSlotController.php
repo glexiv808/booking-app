@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CourtSlotRequest;
-use App\Services\Impl\CourtSlotService;
+use App\Services\ICourtSlotService;
 use App\Models\courtSlot;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -13,9 +13,9 @@ class CourtSlotController extends Controller
 {
     use ApiResponse;
 
-    private CourtSlotService $courtSlotService;
+    private ICourtSlotService $courtSlotService;
 
-    public function __construct(CourtSlotService $courtSlotService) {
+    public function __construct(ICourtSlotService $courtSlotService) {
         $this->courtSlotService = $courtSlotService;
     }
 

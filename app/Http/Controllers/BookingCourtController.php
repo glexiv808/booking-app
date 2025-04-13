@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookingCourtRequest;
-use App\Services\Impl\BookingCourtService;
+use App\Services\IBookingCourtService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
@@ -11,9 +11,9 @@ class BookingCourtController extends Controller
 {
     use ApiResponse;
 
-    private BookingCourtService $bookingCourtService;
+    private IBookingCourtService $bookingCourtService;
 
-    public function __construct(BookingCourtService $bookingCourtService)
+    public function __construct(IBookingCourtService $bookingCourtService)
     {
         $this->bookingCourtService = $bookingCourtService;
     }

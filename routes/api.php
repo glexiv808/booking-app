@@ -23,7 +23,7 @@ Route::get('/verifyEmail', [AuthController::class, 'verifyEmail']);
 
 // User routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', [UserController::class, 'me']);
+    Route::get('/me', [UserController::class, 'me']);                                                                
 });
 
 // SportType routes
@@ -100,23 +100,25 @@ Route::middleware(['auth:sanctum', 'ability:owner'])->group(function () {
 //Court routes
 Route::prefix('court')->group(function () {
     Route::get('/', [CourtController::class, 'index']);
-    Route::post('/', [CourtController::class, 'store']);
     Route::get('/{court_id}', [CourtController::class, 'findById']);
-    Route::put('/{court_id}', [CourtController::class, 'update']);
-    Route::delete('/{court_id}', [CourtController::class, 'delete']);
+    Route::middleware(['auth:sanctum', 'ability:owner'])->group(function () {
+        Route::post('/', [CourtController::class, 'store']);
+        Route::put('/{court_id}', [CourtController::class, 'update']);
+        Route::delete('/{court_id}', [CourtController::class, 'delete']);
+    }); 
 });
 
 Route::prefix('courtslot')->group(function () {
     Route::get('/', [CourtSlotController::class, 'index']);
-    Route::post('/', [CourtSlotController::class, 'store']);
     Route::get('/{slot_id}', [CourtSlotController::class, 'findById']);
+    Route::post('/', [CourtSlotController::class, 'store']);
     Route::put('/{slot_id}', [CourtSlotController::class, 'update']);
     Route::delete('/{slot_id}', [CourtSlotController::class, 'delete']);
 });
 Route::prefix('bookingcourt')->group(function () {
     Route::get('/', [BookingCourtController::class, 'index']);
-    Route::post('/', [BookingCourtController::class, 'store']);
     Route::get('/{booking_court_id}', [BookingCourtController::class, 'findById']);
+    Route::post('/', [BookingCourtController::class, 'store']);
     Route::put('/{booking_court_id}', [BookingCourtController::class, 'update']);
     Route::delete('/{booking_court_id}', [BookingCourtController::class, 'delete']);
 });
