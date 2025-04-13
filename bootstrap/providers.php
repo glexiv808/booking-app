@@ -3,7 +3,9 @@
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\AuthServiceProvider::class,
+
     App\Providers\CourtProvider::class,
+    App\Providers\FieldPriceProvider::class,
     App\Providers\FieldProvider::class,
     App\Providers\LocationServiceProvider::class,
     App\Providers\ReviewProvider::class,
