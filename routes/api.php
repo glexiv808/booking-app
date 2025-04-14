@@ -114,9 +114,11 @@ Route::prefix('court')->group(function () {
 Route::prefix('courtslot')->group(function () {
     Route::get('/', [CourtSlotController::class, 'index']);
     Route::get('/{slot_id}', [CourtSlotController::class, 'findById']);
-    Route::post('/', [CourtSlotController::class, 'store']);
-    Route::put('/{slot_id}', [CourtSlotController::class, 'update']);
-    Route::delete('/{slot_id}', [CourtSlotController::class, 'delete']);
+    Route::middleware(['auth:sanctum', 'ability:owner'])->group(function () {
+        Route::post('/', [CourtSlotController::class, 'store']);
+        Route::put('/{slot_id}', [CourtSlotController::class, 'update']);
+        Route::delete('/{slot_id}', [CourtSlotController::class, 'delete']);
+    });
 });
 Route::prefix('bookingcourt')->group(function () {
     Route::get('/', [BookingCourtController::class, 'index']);

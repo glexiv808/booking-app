@@ -24,6 +24,7 @@ class CourtSlotController extends Controller
     }
 
     public function store(CourtSlotRequest $request): JsonResponse {
+        $this->authorize('create', Court::class);
         return $this->successResponse($this->courtSlotService->add($request), "Saved Court Slot");
     }
 
@@ -32,6 +33,7 @@ class CourtSlotController extends Controller
     }
 
     public function update(string $id, CourtSlotRequest $request): JsonResponse {
+        $this->authorize('update', Court::class);
         $data = $this->courtSlotService->update($id, $request);
         if (!$data) {
             return $this->errorResponse("Updated Court Slot Failed", 500);
@@ -40,6 +42,7 @@ class CourtSlotController extends Controller
     }
 
     public function delete(string $id): JsonResponse {
+        $this->authorize('delete', Court::class);
         $data = $this->courtSlotService->delete($id);
         if (!$data) {
             return $this->errorResponse("Deleted Court Slot Failed", 500);
