@@ -39,7 +39,7 @@ class VenuePolicy
     public function update(User $user, Venue $venue, VenueFormRequest $request): bool
     {
         if ($request && $request->has('status')) {
-            return $user->role === 'admin';
+            return in_array($user->role, ['admin', 'owner']);
         }
         if ($request->has('status')) {
             return false;
