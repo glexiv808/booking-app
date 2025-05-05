@@ -11,7 +11,6 @@ return [
     App\Providers\FieldPriceProvider::class,
     App\Providers\FieldProvider::class,
     App\Providers\LocationServiceProvider::class,
-    App\Providers\MapProvider::class,
     App\Providers\PaymentProvider::class,
     App\Providers\ReviewProvider::class,
     App\Providers\SportTypeProvider::class,

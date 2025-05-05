@@ -7,7 +7,6 @@ use App\Http\Controllers\FieldController;
 use App\Http\Controllers\FieldOpeningHoursController;
 use App\Http\Controllers\FieldPriceController;
 use App\Http\Controllers\LocationServiceController;
-use App\Http\Controllers\MapController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SportTypeController;
 use App\Http\Controllers\UserController;
@@ -76,7 +75,6 @@ Route::prefix('venues')->group(function () {
     Route::get('/map', [VenueController::class, 'venueForMap']);
     Route::get('/detail/{venueId}', [VenueController::class, 'getVenueDetail']);
     Route::get('/search_by_id/{venue_id}', [VenueController::class, 'findById']);
-    Route::get('/search_near', [VenueController::class, 'searchNearByLatLng']);
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [VenueController::class, 'store']);
         Route::put('/{venue_id}', [VenueController::class, 'update']);
@@ -182,5 +180,3 @@ Route::prefix('/admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard']);
     });
 });
-
-Route::get('/map/getByName', [MapController::class, 'getLatLngByName']);
