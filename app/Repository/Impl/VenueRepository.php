@@ -9,6 +9,7 @@ use App\Repository\IVenueRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use function Symfony\Component\Translation\t;
 
@@ -16,27 +17,44 @@ class VenueRepository implements IVenueRepository
 {
     public function show(array $data)
     {
-        return Venue::where('status', 'active')
-            ->with('images')
+        return $this->getVenuesQuery($data)
+            ->where('status', 'active')
+            ->get()
+            ->map(fn($venue) => $this->transformVenue($venue));
+    }
+
+    public function showForOwner(array $data)
+    {
+        return $this->getVenuesQuery($data)
+            ->where('owner_id', $data['uid'])
+            ->get()
+            ->map(fn($venue) => $this->transformVenue($venue));
+    }
+
+    private function getVenuesQuery(array $data)
+    {
+        return Venue::with('images')
             ->when(!empty($data['name']), function ($query) use ($data) {
                 $query->where('name', 'like', '%' . $data['name'] . '%');
             })
             ->orderBy($data['sortBy'] ?? 'created_at', $data['sortDirection'] ?? 'desc')
             ->skip((($data['page'] ?? 1) - 1) * ($data['limit'] ?? 10))
-            ->take($data['limit'] ?? 10)
-            ->get()
-            ->map(function ($venue) {
-                $images = $venue->images->groupBy('type');
-                return [
-                    'venue_id' => $venue->venue_id,
-                    'name' => $venue->name,
-                    'address' => $venue->address,
-                    'thumbnail' => $images->has('thumbnail') ? $images['thumbnail']->first()->image_url : null,
-                    'cover' => $images->has('cover') ? $images['cover']->first()->image_url : null,
-                    'created_at' => $venue->created_at,
-                    'updated_at' => $venue->updated_at,
-                ];
-            });
+            ->take($data['limit'] ?? 10);
+    }
+
+    private function transformVenue($venue)
+    {
+        $images = $venue->images->groupBy('type');
+
+        return [
+            'venue_id' => $venue->venue_id,
+            'name' => $venue->name,
+            'address' => $venue->address,
+            'thumbnail' => $images->has('thumbnail') ? $images['thumbnail']->first()->image_url : null,
+            'cover' => $images->has('cover') ? $images['cover']->first()->image_url : null,
+            'created_at' => $venue->created_at,
+            'updated_at' => $venue->updated_at,
+        ];
     }
 
     public function getById(string $id)
@@ -104,34 +122,7 @@ class VenueRepository implements IVenueRepository
             ->where('venue_id', $venueId)
             ->firstOrFail();
 
-        $openingHours = $venue->fields
-            ->pluck('openingHourToday')
-            ->filter();
-
-        $earliestOpening = $openingHours->min('opening_time');
-        $latestClosing = $openingHours->max('closing_time');
-
-        $images = $venue->images->groupBy('type')->mapWithKeys(function ($group, $type) {
-            if ($type !== 'default') {
-                return [$type => $group->first()->image_url ?? null];
-            }
-            return [$type => $group->pluck('image_url')->toArray()];
-        })->toArray();
-
-        return [
-            'venue_id' => $venue->venue_id,
-            'venue_name' => $venue->name,
-            'venue_address' => $venue->address,
-            'status' => $venue->status,
-            'phone_number' => $venue->owner?->phone_number,
-            'opening' => $earliestOpening,
-            'closing' => $latestClosing,
-            'images' => [
-                'thumbnail' => $images['thumbnail'] ?? null,
-                'cover' => $images['cover'] ?? null,
-                'default' => $images['default'] ?? []
-            ]
-        ];
+        return $this->formatVenueDetail($venue);
     }
 
     private function buildVenueQuery($query)
@@ -233,13 +224,13 @@ class VenueRepository implements IVenueRepository
         })->all();
     }
 
-    public function searchNearByLatLng($lat, $lng): Collection
+    public function searchNearByLatLng($lat, $lng, $distance): Collection
     {
         $lng = (float) $lng;
         $lat = (float) $lat;
 
         $pointWKT = "POINT($lng $lat)";
-
+        Log::info("diss", [$distance]);
         // Truy vấn các venue trong bán kính 4km
         $venues = DB::table('venues')
             ->select([
@@ -249,9 +240,9 @@ class VenueRepository implements IVenueRepository
                 'status',
                 'latitude',
                 'longitude',
-                DB::raw("ST_Distance_Sphere(coordinates, ST_GeomFromText('$pointWKT')) AS distance")
+                DB::raw("ROUND(ST_Distance_Sphere(coordinates, ST_GeomFromText('$pointWKT')) / 1000, 2) AS distance")
             ])
-            ->whereRaw("ST_Distance_Sphere(coordinates, ST_GeomFromText(?)) <= 4000", [$pointWKT])
+            ->whereRaw("ST_Distance_Sphere(coordinates, ST_GeomFromText(?)) <= $distance", [$pointWKT])
             ->orderBy('distance')
             ->get();
 
@@ -269,6 +260,7 @@ class VenueRepository implements IVenueRepository
                 'latitude' => $venue->latitude,
                 'longitude' => $venue->longitude,
                 'address' => $venue->address,
+                'distance' => $venue->distance,
                 'sport_types' => $sportTypes->map(function ($sportType) {
                     return [
                         'id' => $sportType->sport_type_id,
@@ -279,4 +271,94 @@ class VenueRepository implements IVenueRepository
         });
     }
 
+    public function searchNearByLatLngForHome($lat, $lng, $distance): Collection
+    {
+        $lng = (float) $lng;
+        $lat = (float) $lat;
+
+        $pointWKT = "POINT($lng $lat)";
+
+        $venues = DB::table('venues')
+            ->join('users', 'venues.owner_id', '=', 'users.uuid')
+            ->select([
+                'venues.venue_id',
+                'venues.name',
+                'venues.address',
+                'venues.status',
+                'venues.latitude',
+                'venues.longitude',
+                'users.phone_number',
+                DB::raw("ROUND(ST_Distance_Sphere(coordinates, ST_GeomFromText('$pointWKT')) / 1000, 2) AS distance")
+            ])
+            ->whereRaw("ST_Distance_Sphere(coordinates, ST_GeomFromText(?)) <= $distance", [$pointWKT])
+            ->orderBy('distance')
+            ->get();
+
+        return $venues->map(function ($venue) {
+            $venueModel = Venue::with(['fields.openingHourToday', 'images'])
+                ->where('venue_id', $venue->venue_id)
+                ->first();
+
+            return $this->formatVenueBasicInfo($venueModel, [
+                'latitude' => $venue->latitude,
+                'longitude' => $venue->longitude,
+                'distance' => $venue->distance,
+                'phone_number' => $venue->phone_number,
+            ]);
+        });
+    }
+
+    private function formatVenueDetail($venue): array
+    {
+        $openingHours = $venue->fields->pluck('openingHourToday')->filter();
+
+        $earliestOpening = $openingHours->min('opening_time');
+        $latestClosing = $openingHours->max('closing_time');
+
+        $images = $venue->images->groupBy('type')->mapWithKeys(function ($group, $type) {
+            if ($type !== 'default') {
+                return [$type => $group->first()->image_url ?? null];
+            }
+            return [$type => $group->pluck('image_url')->toArray()];
+        })->toArray();
+
+        return [
+            'venue_id' => $venue->venue_id,
+            'venue_name' => $venue->name,
+            'venue_address' => $venue->address,
+            'status' => $venue->status,
+            'phone_number' => $venue->owner?->phone_number,
+            'opening' => $earliestOpening,
+            'closing' => $latestClosing,
+            'images' => [
+                'thumbnail' => $images['thumbnail'] ?? null,
+                'cover' => $images['cover'] ?? null,
+                'default' => $images['default'] ?? []
+            ]
+        ];
+    }
+
+    private function formatVenueBasicInfo($venue, $extra = []): array
+    {
+        $data = $this->formatVenueDetail($venue);
+
+        $sportTypes = DB::table('fields')
+            ->join('sport_types', 'fields.sport_type_id', '=', 'sport_types.sport_type_id')
+            ->where('fields.venue_id', $venue->venue_id)
+            ->distinct()
+            ->select('sport_types.sport_type_id', 'sport_types.name')
+            ->get()
+            ->map(fn($sportType) => [
+                'id' => $sportType->sport_type_id,
+                'name' => $sportType->name,
+            ]);
+
+        return array_merge($data, [
+            'latitude' => $extra['latitude'] ?? null,
+            'longitude' => $extra['longitude'] ?? null,
+            'distance' => $extra['distance'] ?? null,
+            'sport_types' => $sportTypes,
+            'phone_number' => $extra['phone_number'] ?? ($data['phone_number'] ?? null),
+        ]);
+    }
 }
