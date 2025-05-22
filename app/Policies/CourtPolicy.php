@@ -36,16 +36,11 @@ class CourtPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Court $court, CourtRequest $request): bool
+    public function update(User $user, Court $court): bool
     {
-        if ($request && $request->has('status')) {
-            return $user->role === 'admin';
-        }
-        if ($request->has('status')) {
-            return false;
-        }
-        return $user->uuid === $court->owner_id;
+        return in_array($user->role, ['admin', 'owner']) || $user->uuid === $court->owner_id;
     }
+
 
     public function isActive(User $user): bool
     {
@@ -57,7 +52,7 @@ class CourtPolicy
      */
     public function delete(User $user, Court $court): bool
     {
-        return $user->uuid === $court->owner_id || in_array($user->role, ['admin']);
+        return $user->uuid === $court->owner_id || in_array($user->role, ['admin', 'owner']);
     }
 
     /**

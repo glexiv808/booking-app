@@ -2,6 +2,7 @@
  namespace App\Services;
 
  use App\Http\Requests\CourtRequest;
+ use App\Http\Requests\UpdateCourtStatusRequest;
  use App\Http\Requests\CourtSpecialTimeRequest;
  use App\Models\Court;
 
@@ -13,7 +14,7 @@
 
     public function add(CourtRequest $request): Court;
 
-    public function update(string $id, CourtRequest $request): ?Court;
+    public function update(string $id, UpdateCourtStatusRequest $request): ?Court;
 
     public function delete(string $id): ?Court;
 

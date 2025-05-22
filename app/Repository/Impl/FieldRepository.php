@@ -115,6 +115,39 @@ class FieldRepository implements IFieldRepository
         ];
     }
 
+    public function getCourtsByField(string $fieldId): array
+    {
+        $date = now(); // hoặc Carbon::now() nếu chưa import
+        $dayOfWeek = $date->format('l');
+        $field = $this->fetchField($fieldId, $dayOfWeek);
+        $openingHours = $this->getOpeningHours($field);
+        [$openingTime, $closingTime] = $this->validateOpeningHours($openingHours);
+
+        $courts = $this->fetchCourts($fieldId, $date);
+        $courtSpecialTimes = $this->fetchCourtSpecialTimes($date, $courts);
+        $courtSlotsLocked = $this->courtSlotRepository->getLockedCourtSlotsByDateAndCourts(
+            $date,
+            $courts->pluck('court_id')->toArray()
+        );
+
+        $baseTimeLine = $this->generateBaseTimeLine($field, $openingTime, $closingTime, $date);
+
+        return [
+            'base_time_line' => $baseTimeLine,
+            'courts' => $this->generateCourtTimeSlots(
+                $courts,
+                $field,
+                $openingTime,
+                $closingTime,
+                $date,
+                $courtSlotsLocked,
+                $courtSpecialTimes,
+                $baseTimeLine
+            )
+        ];
+    }
+
+
     /**
      * @throws ErrorException
      */

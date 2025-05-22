@@ -109,6 +109,7 @@ Route::prefix('court')->group(function () {
     Route::get('/', [CourtController::class, 'index']);
     Route::get('/{court_id}', [CourtController::class, 'findById']);
     Route::post('/getByField/{fieldId}', [FieldController::class, 'getCourtsByFieldAndDate']);
+    Route::get('/getByField/{fieldId}', [FieldController::class, 'getCourtsByField']);
     Route::middleware(['auth:sanctum', 'ability:owner'])->group(function () {
         Route::post('/', [CourtController::class, 'store']);
         Route::put('/{court_id}', [CourtController::class, 'update']);

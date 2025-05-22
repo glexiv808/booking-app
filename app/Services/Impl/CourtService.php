@@ -3,6 +3,7 @@
 namespace App\Services\Impl;
 
 use App\Http\Requests\CourtRequest;
+use App\Http\Requests\UpdateCourtStatusRequest;
 use App\Http\Requests\CourtSpecialTimeRequest;
 use App\Models\Court;
 use App\Repository\ICourtRepository;
@@ -35,12 +36,8 @@ class CourtService implements ICourtService
         return $this->repository->store($data);
     }
 
-    public function update(string $id, CourtRequest $request): ?Court {
-        $data = [
-            'field_id' => $request->get('field_id'),
-            'court_name' => $request->get('court_name'),
-            'is_active' => $request->get('is_active'),
-        ];
+    public function update(string $id, UpdateCourtStatusRequest $request): ?Court {
+        $data["is_active"] = $request->get('is_active');
         return $this->repository->update($data, $id);
     }
 
