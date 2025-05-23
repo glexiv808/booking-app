@@ -62,6 +62,8 @@ interface IFieldService
      * @return array The list of courts.
      */
     public function getCourtsByFieldAndDate(string $fieldId, string $date): array;
+    
+    public function getCourtsByField(string $fieldId): array;
 
     public function getFieldStas(): array;
 

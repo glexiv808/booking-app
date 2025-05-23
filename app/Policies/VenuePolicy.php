@@ -40,6 +40,7 @@ class VenuePolicy
     {
         if ($request && $request->has('status')) {
             return $user->role === 'admin' ||  $user->role === 'owner';
+
         }
         if ($request->has('status')) {
             return false;
@@ -57,7 +58,7 @@ class VenuePolicy
      */
     public function delete(User $user, Venue $venue): bool
     {
-        return $user->uuid === $venue->owner_id || in_array($user->role, ['admin']);
+        return $user->uuid === $venue->owner_id || in_array($user->role, ['admin', 'owner']);
     }
 
     /**

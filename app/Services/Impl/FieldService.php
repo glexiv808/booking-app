@@ -91,6 +91,11 @@ class FieldService implements IFieldService
         return $this->repository->getCourtsByFieldAndDate($fieldId, $date);
     }
 
+    public function getCourtsByField(string $fieldId): array
+    {
+        return $this->repository->getCourtsByField($fieldId);
+    }
+
     public function getFieldStas(): array{
         return $this->repository->getFieldStas();
     }

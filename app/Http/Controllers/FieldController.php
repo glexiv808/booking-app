@@ -98,4 +98,15 @@ class FieldController extends Controller
             return $this->errorResponse("ERROR", 500);
         }
     }
+
+    public function getCourtsByField(string $fieldId): JsonResponse
+{
+    try {
+        return $this->successResponse(
+            $this->fieldService->getCourtsByField($fieldId)
+        );
+    } catch (\Exception $exception) {
+        return $this->errorResponse("ERROR", 500);
+    }
+}
 }

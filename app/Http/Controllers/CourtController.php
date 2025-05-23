@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CourtRequest;
+use App\Http\Requests\UpdateCourtStatusRequest;
 use App\Http\Requests\CourtSpecialTimeRequest;
 use App\Services\ICourtService;
 use App\Models\Court;
@@ -34,8 +35,9 @@ class CourtController extends Controller
         return $this->successResponse($this->courtService->findById($id), "Court by ID");
     }
 
-    public function update(string $id, CourtRequest $request): JsonResponse {
-        $this->authorize('update', Court::class);
+    public function update(string $id, UpdateCourtStatusRequest $request): JsonResponse {
+        $court = Court::find($id);
+        $this->authorize('update', $court);
         $data = $this->courtService->update($id, $request);
         if (!$data) {
             return $this->errorResponse("Updated Court Failed", 500);
@@ -44,12 +46,19 @@ class CourtController extends Controller
     }
 
     public function delete(string $id): JsonResponse {
-        $this->authorize('delete', Court::class);
+        $court = Court::find($id);
+        if (!$court) {
+            return $this->errorResponse("Court not found", 404);
+        }
+
+        $this->authorize('delete', $court);
+
         $data = $this->courtService->delete($id);
         if (!$data) {
             return $this->errorResponse("Deleted Court Failed", 500);
         }
-        return $this->successResponse($data, "Deleted Court by ID");
+
+        return $this->successResponse("Deleted Court by ID");
     }
     /**
      * Creates special times for a court.
